@@ -4,7 +4,14 @@
 
 ## Why
 
-On my new laptop keyboard I constantly hit the Copilot key instead of the Left Arrow. Copilot pops a half‑screen panel and breaks my flow. So I remapped a few keys to restore comfortable navigation and kill accidental Copilot launches.
+On my new laptop keyboard I constantly hit the Copilot key instead of the Left Arrow. Copilot pops a half‑screen panel and breaks my flow. So I remapped a few keys to restore comfortable navigation near the bottom‑left corner.
+
+Additionally, I want the remapped keys to behave like real arrows in editors and terminals:  
+- `Shift + arrow` should select text.  
+- `Ctrl + arrow` should jump by word / token / unit.  
+- `Shift + Ctrl + arrow` should select by word.  
+
+The updated script keeps these standard shortcuts working even on the remapped keys.
 
 ## What Was Remapped
 
@@ -19,8 +26,20 @@ Resulting distribution:
 - Up: original ↑ and Right Shift.
 - Right: original → and former Down.
 - Down: former Left.
-- Left: Copilot key.
+- Left: Copilot key.  
 (Original Up and Right remain untouched.)
+
+## Modifier behavior (Shift / Ctrl / Alt)
+
+The script uses `Send "{Blind}{...}"` for all remapped arrows.  
+This means:
+
+- Holding **Shift** while pressing a remapped key still selects text (as with normal arrows).
+- Holding **Ctrl** still moves by word / token (e.g. in editors and terminals).
+- Holding **Ctrl + Shift** selects by word.
+- Any **Alt + Arrow** behavior your editor uses is preserved as well.
+
+In other words, the OS / editor keeps “seeing” the usual combinations (`Shift+Left`, `Ctrl+Right`, etc.), only now the arrow comes from your remapped key instead of the original arrow key.
 
 ## Requirements
 
@@ -127,6 +146,7 @@ F12::ExitApp
 - Copilot key sends hardware combo Win+Shift+F23. We immediately release Win and Shift programmatically to avoid “Shift+Left” (selection) or “Win+Left” (snap window).
 - First key press fires once, then after a delay (`Sleep 400`) a fast repeat loop begins (`Sleep 30` interval).
 - Other remapped keys use identical repeat logic.
+- `{Blind}` ensures that any held modifiers (Shift / Ctrl / Alt) are preserved, so standard navigation shortcuts continue to work on the remapped keys.
 
 ### Tuning
 
